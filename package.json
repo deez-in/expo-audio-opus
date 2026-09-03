@@ -1,0 +1,67 @@
+{
+  "name": "expo-audio-opus",
+  "version": "0.1.0",
+  "description": "Module to handle OPUS & .ogg files",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build": "bun run build:android && bun run build:ios && bun run build:ios-sim",
+    "clean": "expo-module clean",
+    "lint": "expo-module lint",
+    "test": "expo-module test",
+    "prepare": "tsc",
+    "prepublishOnly": "expo-module prepublishOnly",
+    "build:android": "bun run ./scripts/cargo-android.ts",
+    "build:ios": "bun run ./scripts/cargo-ios.ts --target=ios",
+    "build:ios-sim": "bun run ./scripts/cargo-ios.ts --target=ios-sim"
+  },
+  "files": [
+    "build",
+    "android",
+    "ios",
+    "expo-module.config.json"
+  ],
+  "keywords": [
+    "react-native",
+    "expo",
+    "expo-audio-opus",
+    "ExpoAudioOpus",
+    "opus",
+    "audio",
+    "ogg"
+  ],
+  "repository": "https://github.com/debarkamondal/expo-audio-opus",
+  "bugs": {
+    "url": "https://github.com/debarkamondal/expo-audio-opus/issues"
+  },
+  "author": "debarkamondal <debarkamondal@gmail.com> (https://github.com/debarkamondal)",
+  "license": "MIT",
+  "homepage": "https://github.com/debarkamondal/expo-audio-opus#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@types/jest": "^29.2.1",
+    "@types/react": "~19.1.1",
+    "babel-preset-expo": "~55.0.8",
+    "eslint": "~9.39.4",
+    "eslint-config-universe": "^15.0.3",
+    "expo": "^57.0.19",
+    "expo-module-scripts": "^56.0.3",
+    "jest": "^29.7.0",
+    "jest-expo": "~55.0.9",
+    "prettier": "^3.0.0",
+    "react-native": "0.82.1",
+    "typescript": "^5.9.2"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "roots": [
+      "<rootDir>/src"
+    ]
+  },
+  "peerDependencies": {
+    "expo": "*",
+    "react": "*",
+    "react-native": "*"
+  }
+}

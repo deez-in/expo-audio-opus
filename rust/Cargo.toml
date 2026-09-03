@@ -1,0 +1,24 @@
+[package]
+name = "expo-audio-opus-rust"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "expo_audio_opus"
+crate-type = ["staticlib", "cdylib", "lib"]
+
+[dependencies]
+opus-pure = { path = "../opus-pure" }
+jni = { version = "0.21.1", optional = true }
+
+[features]
+default = []
+ffi = []
+jni = ["dep:jni"]
+
+[profile.release]
+opt-level = 3
+lto = true
+strip = true
+codegen-units = 1
+panic = "abort"
