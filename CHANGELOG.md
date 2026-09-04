@@ -2,6 +2,26 @@
 
 Notable changes to `expo-audio-opus`, newest first.
 
+## 0.3.1 — 2026-09-04
+
+### Fixed
+- **iOS Playback Buffer Frame Calculation**: Fixed a Swift compiler error (`binary operator '/' cannot be applied to operands of type 'Int32' and 'Int'`) in `ExpoAudioOpusModule.swift` by explicitly casting `channelCount` to `Int32` to match the return type of `opus_player_read_pcm`.
+
+### Changed
+- **Build Script**: Updated the `prepare` script in `package.json` to use `expo-module build` instead of `tsc` to ensure reliable TypeScript compilation across environments.
+
+---
+
+## 0.3.0 — 2026-09-04
+
+### Added
+- **Config Plugin Permissions**: Added Android `RECORD_AUDIO` permission support to the Expo config plugin (`app.plugin.js`) when `microphonePermission` is configured.
+
+### Changed
+- **CI/CD Pipeline**: Updated GitHub Actions checkout and setup-node actions.
+
+---
+
 ## 0.2.0 — 2026-09-04
 
 ### Fixed

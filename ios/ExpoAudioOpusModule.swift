@@ -492,7 +492,7 @@ public class ExpoAudioOpusModule: Module {
                 break
             }
 
-            let frameCount = AVAudioFrameCount(read / Int(format.channelCount))
+            let frameCount = AVAudioFrameCount(read / Int32(format.channelCount))
             guard let audioBuffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frameCount) else {
                 break
             }

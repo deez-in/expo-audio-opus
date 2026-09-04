@@ -1,6 +1,6 @@
 {
   "name": "expo-audio-opus",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Module to handle OPUS & .ogg files",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -9,7 +9,7 @@
     "clean": "expo-module clean",
     "lint": "expo-module lint",
     "test": "expo-module test",
-    "prepare": "tsc",
+    "prepare": "expo-module build",
     "prepublishOnly": "expo-module prepublishOnly",
     "build:android": "bun run ./scripts/cargo-android.ts",
     "build:ios": "bun run ./scripts/cargo-ios.ts --target=ios",
