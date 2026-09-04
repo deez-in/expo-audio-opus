@@ -100,15 +100,16 @@ impl RecorderStream {
         let pending_samples = self.pending_pcm.len() / self.channels;
         let total_samples = self.total_audio_samples as usize + pending_samples;
 
-        // Flushing frames: feed extra silence to push out pre-skip delayed audio
-        let frames =
-            (total_samples + (self.pre_skip as usize).div_ceil(ticks)).div_ceil(self.frame_size);
+        // Flushing frames: only flush pending samples plus pre-skip delay
+        let delay_samples = (self.pre_skip as usize).div_ceil(ticks);
+        let flush_samples = pending_samples + delay_samples;
+        let flush_frames = flush_samples.div_ceil(self.frame_size);
         let final_granule = u64::from(self.pre_skip) + (total_samples * ticks) as u64;
 
         let per_frame = self.frame_size * self.channels;
         let mut block = vec![0i16; per_frame];
 
-        for i in 0..frames {
+        for i in 0..flush_frames {
             let chunk_start = i * per_frame;
             if chunk_start < self.pending_pcm.len() {
                 let available = (self.pending_pcm.len() - chunk_start).min(per_frame);
@@ -122,7 +123,7 @@ impl RecorderStream {
             let n = self
                 .encoder
                 .encode_s16(&block, self.frame_size, &mut self.packet_buf)?;
-            if i + 1 == frames {
+            if i + 1 == flush_frames {
                 let duration = final_granule.saturating_sub(writer.granule() as u64);
                 writer.write_packet_with_duration(&self.packet_buf[..n], duration as u32)?;
             } else {

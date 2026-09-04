@@ -182,11 +182,14 @@ class ExpoAudioOpusModule : Module() {
       isRecordingPaused = false
 
       try {
+        audioRecord?.stop()
+      } catch (_: Exception) {}
+
+      try {
         recordingThread?.join(1000)
       } catch (_: Exception) {}
       recordingThread = null
 
-      audioRecord?.stop()
       audioRecord?.release()
       audioRecord = null
 
@@ -431,9 +434,11 @@ class ExpoAudioOpusModule : Module() {
     isPlaying = false
     isPlaybackPaused = false
 
-    try {
-      playbackThread?.join(500)
-    } catch (_: Exception) {}
+    if (Thread.currentThread() != playbackThread) {
+      try {
+        playbackThread?.join(500)
+      } catch (_: Exception) {}
+    }
     playbackThread = null
 
     audioTrack?.stop()

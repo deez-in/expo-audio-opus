@@ -78,4 +78,42 @@ mod tests {
 
         let _ = std::fs::remove_file(file_path);
     }
+
+    #[test]
+    fn test_duration_check() {
+        use super::bridge::*;
+        use opus_pure::Application;
+        let sample_rate = 48000;
+        let channels = 1;
+        let frame_size = 960;
+        let temp_dir = std::env::temp_dir();
+        let file_path = temp_dir.join("test_duration.opus");
+        let file_path_str = file_path.to_str().unwrap();
+
+        let mut recorder = RecorderStream::new(
+            file_path_str,
+            sample_rate,
+            channels,
+            24000,
+            Application::Voip,
+        ).unwrap();
+
+        // 10 frames = 200ms
+        let pcm = vec![100i16; frame_size * 10];
+        recorder.write_pcm(&pcm).unwrap();
+        let info = recorder.finish().unwrap();
+
+        let mut player = PlayerDecoder::open(file_path_str, sample_rate).unwrap();
+        println!("Reported duration: {} ms, Detected file duration: {} ms", info.duration_ms, player.duration_ms());
+
+        let mut total_read = 0;
+        let mut buf = vec![0i16; 960];
+        while let Ok(n) = player.read_pcm(&mut buf) {
+            if n == 0 { break; }
+            total_read += n;
+        }
+        println!("Total samples read: {}, Expected samples: {}", total_read, pcm.len());
+        let _ = std::fs::remove_file(file_path);
+    }
+
 }
