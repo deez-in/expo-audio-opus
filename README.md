@@ -215,7 +215,7 @@ To compile the native Rust libraries:
 
 ```bash
 # Clone with submodules
-git clone --recurse-submodules https://github.com/debarkamondal/expo-audio-opus.git
+git clone --recurse-submodules https://github.com/deez-in/expo-audio-opus.git
 
 # Install dependencies
 bun install

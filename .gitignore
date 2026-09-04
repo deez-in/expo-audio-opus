@@ -1,42 +1,9 @@
-# Rust build artifacts
-target/
-rust/target/
-**/target/
-
-# Node.js
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Build outputs
-build/
-.expo/
-
-# IDEs, Agents & Environment
-.agent/
-.claude/
-.vscode/
-.idea/
-*.iml
-.DS_Store
-jsconfig.json
-
-# Android / Gradle
-.gradle/
-.cxx/
-local.properties
-.classpath
-.project
-.settings
-android/app/libs/
-android/keystores/debug.keystore
-
-# iOS / CocoaPods
-Pods/
-*.xcworkspace
-xcuserdata/
-DerivedData/
-*.moved-aside
-*.ipa
-*.hmap
+node_modules
+build
+.expo
+.vscode
+rust/target
+opus-pure/target
+.agent
+*.so
+*.a

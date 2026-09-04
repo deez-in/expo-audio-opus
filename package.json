@@ -1,6 +1,6 @@
 {
   "name": "expo-audio-opus",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Module to handle OPUS & .ogg files",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -30,13 +30,16 @@
     "audio",
     "ogg"
   ],
-  "repository": "https://github.com/debarkamondal/expo-audio-opus",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deez-in/expo-audio-opus.git"
+  },
   "bugs": {
-    "url": "https://github.com/debarkamondal/expo-audio-opus/issues"
+    "url": "https://github.com/deez-in/expo-audio-opus/issues"
   },
   "author": "debarkamondal <debarkamondal@gmail.com> (https://github.com/debarkamondal)",
   "license": "MIT",
-  "homepage": "https://github.com/debarkamondal/expo-audio-opus#readme",
+  "homepage": "https://github.com/deez-in/expo-audio-opus#readme",
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.26.0",

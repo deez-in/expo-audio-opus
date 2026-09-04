@@ -1,0 +1,66 @@
+name: Publish to npm
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build-and-publish:
+    runs-on: macos-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive # Crucial: Initialize the opus-pure submodule
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios, aarch64-apple-ios-sim, aarch64-linux-android, armv7-linux-androideabi, i686-linux-android, x86_64-linux-android
+
+      - name: Configure Android NDK env
+        run: |
+          if [ -d "$ANDROID_HOME/ndk" ]; then
+            NDK_VERSION=$(ls -1 "$ANDROID_HOME/ndk" | sort -V | tail -n 1)
+            NDK_PATH="$ANDROID_HOME/ndk/$NDK_VERSION"
+          else
+            NDK_PATH="$ANDROID_HOME/ndk/29.0.14206865"
+          fi
+          echo "Using Android NDK at: $NDK_PATH"
+          echo "ANDROID_NDK_HOME=$NDK_PATH" >> "$GITHUB_ENV"
+          echo "ANDROID_NDK_ROOT=$NDK_PATH" >> "$GITHUB_ENV"
+
+      - name: Install cargo-ndk
+        run: cargo install cargo-ndk
+
+      - name: Install JS dependencies
+        run: bun install
+
+      - name: Build Native Android & iOS Libraries
+        run: bun run build
+
+      - name: Build TypeScript bundle
+        run: bun run prepare
+
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Publish to npm
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
