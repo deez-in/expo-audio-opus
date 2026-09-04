@@ -2,6 +2,13 @@
 
 Notable changes to `expo-audio-opus`, newest first.
 
+## 0.3.2 — 2026-09-04
+
+### Fixed
+- **iOS Playback Buffer Starvation**: Replaced fixed-interval (`usleep`) buffer feeding with a robust semaphore-based back-pressure mechanism in `ExpoAudioOpusModule.swift`. Added chunk pre-buffering and ensured synchronous end-of-stream teardown to eliminate audio starvation drops during playback.
+
+---
+
 ## 0.3.1 — 2026-09-04
 
 ### Fixed

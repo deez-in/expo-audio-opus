@@ -295,7 +295,7 @@ public class ExpoAudioOpusModule: Module {
 
             engine.connect(node, to: engine.mainMixerNode, format: format)
             try engine.start()
-            node.play()
+            // node.play() will be called by feedPlaybackBuffers after pre-buffering
 
             self.playerEngine = engine
             self.playerNode = node
@@ -469,6 +469,10 @@ public class ExpoAudioOpusModule: Module {
     private func feedPlaybackBuffers(player: OpaquePointer, node: AVAudioPlayerNode, format: AVAudioFormat) {
         let chunkSize = 4096
         var pcmBuffer = [Int16](repeating: 0, count: chunkSize)
+        let maxBuffers = 4
+        let semaphore = DispatchSemaphore(value: maxBuffers)
+        var buffersScheduled = 0
+        var hasStartedPlaying = false
 
         while self.isPlaying {
             if self.isPlaybackPaused {
@@ -476,24 +480,48 @@ public class ExpoAudioOpusModule: Module {
                 continue
             }
 
+            semaphore.wait()
+
+            if !self.isPlaying {
+                semaphore.signal()
+                break
+            }
+
             let read = opus_player_read_pcm(player, &pcmBuffer, chunkSize)
             if read <= 0 {
                 // End of stream
-                DispatchQueue.main.async {
-                    self.sendEvent("onPlaybackStatusUpdate", [
-                        "isPlaying": false,
-                        "isPaused": false,
-                        "positionMs": self.playbackDurationMs,
-                        "durationMs": self.playbackDurationMs,
-                        "didJustFinish": true
-                    ])
-                    self.stopCurrentPlayback()
+                if !hasStartedPlaying {
+                    node.play()
+                    hasStartedPlaying = true
+                }
+                
+                // Wait for all in-flight buffers to finish playing
+                for _ in 0..<maxBuffers {
+                    semaphore.wait()
+                }
+                
+                if self.isPlaying {
+                    DispatchQueue.main.async {
+                        self.sendEvent("onPlaybackStatusUpdate", [
+                            "isPlaying": false,
+                            "isPaused": false,
+                            "positionMs": self.playbackDurationMs,
+                            "durationMs": self.playbackDurationMs,
+                            "didJustFinish": true
+                        ])
+                        self.stopCurrentPlayback()
+                    }
+                }
+                
+                for _ in 0..<maxBuffers {
+                    semaphore.signal()
                 }
                 break
             }
 
             let frameCount = AVAudioFrameCount(read / Int32(format.channelCount))
             guard let audioBuffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frameCount) else {
+                semaphore.signal()
                 break
             }
             audioBuffer.frameLength = frameCount
@@ -504,8 +532,15 @@ public class ExpoAudioOpusModule: Module {
                 }
             }
 
-            node.scheduleBuffer(audioBuffer)
-            usleep(40_000)
+            node.scheduleBuffer(audioBuffer) {
+                semaphore.signal()
+            }
+            buffersScheduled += 1
+            
+            if !hasStartedPlaying && buffersScheduled >= 2 {
+                node.play()
+                hasStartedPlaying = true
+            }
         }
     }
 
