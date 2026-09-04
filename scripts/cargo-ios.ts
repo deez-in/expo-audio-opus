@@ -33,7 +33,7 @@ function main() {
   const target = TARGETS[targetKey];
   console.log(`Building ios for target ${target}`);
 
-  process.chdir("rust");
+  process.chdir("opus-pure");
 
   console.log("Building rust library for ios");
   cargoBuild(target);
@@ -43,7 +43,7 @@ function main() {
   const destinationPath = path.join(process.cwd(), "ios", "rust");
   const rustLibPath = path.join(
     process.cwd(),
-    "rust",
+    "opus-pure",
     "target",
     target,
     "release",
@@ -51,7 +51,7 @@ function main() {
   );
   const rustHeadersPath = path.join(
     process.cwd(),
-    "rust",
+    "opus-pure",
     "expo_audio_opus.h"
   );
 

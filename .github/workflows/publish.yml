@@ -14,8 +14,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          submodules: recursive # Crucial: Initialize the opus-pure submodule
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

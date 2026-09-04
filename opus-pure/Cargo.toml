@@ -1,6 +1,6 @@
 [package]
 name = "expo-audio-opus-rust"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2024"
 
 [lib]
@@ -8,7 +8,7 @@ name = "expo_audio_opus"
 crate-type = ["staticlib", "cdylib", "lib"]
 
 [dependencies]
-opus-pure = { path = "../opus-pure" }
+opus-pure = "0.2.1"
 jni = { version = "0.21.1", optional = true }
 
 [features]

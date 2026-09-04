@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name           = 'ExpoAudioOpus'
-  s.version        = '0.1.1'
+  s.version        = '0.2.0'
   s.summary        = 'Expo Native Module for opus-pure audio recording, playback, and codec'
   s.description    = 'Record and playback Ogg Opus audio with AVAudioEngine and convert PCM to Opus'
   s.author         = 'debarkamondal'

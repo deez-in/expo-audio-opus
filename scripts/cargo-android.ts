@@ -25,7 +25,7 @@ function build(target: string) {
 function main() {
   console.log("Building rust library for android");
 
-  process.chdir("rust");
+  process.chdir("opus-pure");
 
   Object.keys(TARGET_TO_DESTINATION).forEach(build);
 
@@ -34,7 +34,7 @@ function main() {
   Object.entries(TARGET_TO_DESTINATION).forEach(([target, architecture]) => {
     const sourcePath = path.join(
       process.cwd(),
-      "rust",
+      "opus-pure",
       "target",
       target,
       "release",

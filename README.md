@@ -214,8 +214,8 @@ console.log("Decoded PCM bytes length:", pcm.length);
 To compile the native Rust libraries:
 
 ```bash
-# Clone with submodules
-git clone --recurse-submodules https://github.com/deez-in/expo-audio-opus.git
+# Clone repository
+git clone https://github.com/deez-in/expo-audio-opus.git
 
 # Install dependencies
 bun install

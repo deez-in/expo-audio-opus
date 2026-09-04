@@ -12,10 +12,10 @@ deezchatz-mobile  →  ⭐ expo-audio-opus (this module)  →  opus-pure (pure R
 
 | Relationship | Details |
 |-------------|---------|
-| **Depends on** | `opus-pure` — included as an untouched git submodule at `opus-pure/` |
+| **Depends on** | `opus-pure` — imported directly from crates.io (`opus-pure = "0.2.1"`) |
 | **Used by** | `deezchatz-mobile` — for voice message recording, preview playback, and Opus encoding |
-| **Wraps** | `opus-pure` via a local bridge crate at `rust/` |
-| **Submodule Policy** | **DO NOT make changes inside `opus-pure/`!** All FFI, JNI, and bridge additions live in `rust/`. |
+| **Wraps** | `opus-pure` via a local bridge crate at `opus-pure/` |
+| **Architecture** | All FFI, JNI, and bridge additions live in `opus-pure/`. |
 
 ---
 
@@ -31,7 +31,7 @@ bun run build:ios              # Cross-compile Rust for iOS device (aarch64-appl
 bun run build:ios-sim          # Cross-compile Rust for iOS simulator (aarch64-apple-ios-sim)
 
 # Run Rust tests
-cd rust && cargo test --features=ffi,jni
+cd opus-pure && cargo test --features=ffi,jni
 ```
 
 ---
@@ -58,9 +58,7 @@ android/
     java/expo/modules/audioopus/ # Kotlin JNI wrapper (AudioRecord & AudioTrack)
     jniLibs/                   # Pre-built shared libraries (.so) for Android targets
 
-opus-pure/                     # Pure-Rust Opus codec (Git submodule — KEEP CLEAN)
-
-rust/                          # Native bridge crate connecting opus-pure to FFI & JNI
+opus-pure/                     # Native bridge crate connecting opus-pure to FFI & JNI
   Cargo.toml                   # crate-type = ["staticlib", "cdylib", "lib"]
   expo_audio_opus.h            # C header for iOS C-FFI
   src/
@@ -86,7 +84,7 @@ The architecture consists of four synchronized layers:
 TypeScript declarations  ←→  Swift / Kotlin native modules  ←→  Rust extern "C" / JNI  ←→  opus-pure core
 ```
 
-1. **Rust Core & Bridge** (`rust/src/`):
+1. **Rust Core & Bridge** (`opus-pure/src/`):
    - `RecorderStream`: Receives PCM 16-bit chunks, buffers into 20ms frames, encodes using `OpusEncoder`, and writes valid Ogg Opus pages with end-trim and granule positioning.
    - `PlayerDecoder`: Demuxes Ogg Opus container, decodes packets with `Trim` (accounting for pre-skip and end-trim), and streams PCM 16-bit to native audio outputs.
    - `ffi.rs`: C-FFI exports with `#[unsafe(no_mangle)]` for iOS.
@@ -119,6 +117,6 @@ TypeScript declarations  ←→  Swift / Kotlin native modules  ←→  Rust ext
 
 ---
 
-## Submodule Rule
+## Dependencies Rule
 
-**NEVER modify files inside `opus-pure/` directly.** The `opus-pure/` directory is an external submodule tracked at `fix/sec-and-perf`. All custom logic, JNI functions, C-FFI bindings, and streaming wrappers must reside exclusively in `rust/`.
+`opus-pure` is consumed as an external crate dependency via crates.io (`opus-pure = "0.2.1"`). All custom logic, JNI functions, C-FFI bindings, and streaming wrappers must reside exclusively in `opus-pure/`.

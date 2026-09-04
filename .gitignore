@@ -2,8 +2,7 @@ node_modules
 build
 .expo
 .vscode
-rust/target
-opus-pure/target
+opus-pure/target/
 .agent
 *.so
 *.a
