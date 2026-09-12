@@ -1,6 +1,6 @@
 {
   "name": "expo-audio-opus",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Module to handle OPUS & .ogg files",
   "main": "build/index.js",
   "types": "build/index.d.ts",

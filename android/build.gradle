@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 group = 'expo.modules.audioopus'
-version = '0.2.0'
+version = '0.3.3'
 
 def expoModulesCorePlugin = new File(project(":expo-modules-core").projectDir.absolutePath, "ExpoModulesCorePlugin.gradle")
 apply from: expoModulesCorePlugin
@@ -30,8 +30,8 @@ if (useManagedAndroidSdkVersions) {
 android {
   namespace "expo.modules.audioopus"
   defaultConfig {
-    versionCode 3
-    versionName "0.2.0"
+    versionCode 4
+    versionName "0.3.3"
     consumerProguardFiles("proguard-rules.pro")
   }
   lintOptions {
